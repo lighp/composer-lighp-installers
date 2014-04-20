@@ -1,5 +1,5 @@
 {
-    "name": "lighp/composer-lighp",
+    "name": "lighp/composer-lighp-installers",
     "type": "composer-plugin",
     "license": "GPLv3",
     "autoload": {
