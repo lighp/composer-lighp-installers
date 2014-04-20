@@ -8,7 +8,7 @@ class Installer extends LibraryInstaller {
 	/**
 	* {@inheritDoc}
 	*/
-	protected function getPackageBasePath(PackageInterface $package) {
+	protected function getInstallPath(PackageInterface $package) {
 		return '.';
 	}
 
