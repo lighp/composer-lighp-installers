@@ -1,0 +1,14 @@
+{
+    "name": "lighp/composer-lighp",
+    "type": "composer-plugin",
+    "license": "GPLv3",
+    "autoload": {
+    	"psr-0": { "lighp\\Composer": "src/" }
+    },
+    "extra": {
+    	"class": "lighp\\Composer\\Plugin"
+    },
+    "require": {
+        "composer-plugin-api": "1.0.0"
+    }
+}
