@@ -186,6 +186,10 @@ class ModuleInstaller extends LibraryInstaller {
 			$deleteFile = true;
 			$changed = false;
 
+			if (!file_exists($filepath)) {
+				continue;
+			}
+
 			if (isset($newFiles[$filepath])) { //File not deleted
 				$deleteFile = false;
 			} elseif (isset($files[$filepath])) {
