@@ -8,6 +8,8 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
 
+function 
+
 class ModuleInstaller extends LibraryInstaller {
 	/**
 	* {@inheritDoc}
@@ -174,8 +176,12 @@ class ModuleInstaller extends LibraryInstaller {
 			}
 		}
 
-		//Remove downloaded files
-		$this->filesystem->removeDirectory($downloadPath);
+		// Remove downloaded files
+		try {
+			$this->filesystem->removeDirectory($downloadPath);	
+		} catch (\Exception $e) {
+			$this->io->write('<warning>Could not delete temporary files for '.$package->getPrettyName().' (in '.$downloadPath.').</warning>');
+		}
 
 		return $copied;
 	}
