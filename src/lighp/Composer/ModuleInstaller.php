@@ -8,8 +8,6 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
 
-function 
-
 class ModuleInstaller extends LibraryInstaller {
 	/**
 	* {@inheritDoc}
