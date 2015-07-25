@@ -9,6 +9,12 @@ use RecursiveIteratorIterator;
 use RuntimeException;
 
 class ModuleInstaller extends LibraryInstaller {
+	protected $overwrite;
+	
+	public function __construct($overwrite = false) {
+		$this->overwrite = $overwrite;
+	}
+	
 	/**
 	* {@inheritDoc}
 	*/
@@ -156,7 +162,7 @@ class ModuleInstaller extends LibraryInstaller {
 					}
 				}
 				
-				if (!$overwrite) {
+				if (!$overwrite && !$this->overwrite) {
 					$targetPath .= '.new';
 					$this->io->write('<warning>'.$sourceIndex.' locally modified, new version installed as '.$targetPath.'</warning>');
 				}
