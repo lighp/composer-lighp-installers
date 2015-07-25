@@ -9,12 +9,6 @@ use RecursiveIteratorIterator;
 use RuntimeException;
 
 class ModuleInstaller extends LibraryInstaller {
-	protected $overwrite;
-	
-	public function __construct($overwrite = false) {
-		$this->overwrite = $overwrite;
-	}
-	
 	/**
 	* {@inheritDoc}
 	*/
@@ -96,6 +90,10 @@ class ModuleInstaller extends LibraryInstaller {
 	}
 
 	protected function downloadCode(PackageInterface $package, array $initialFiles = array()) {
+		$forceOverwrite = $this->composer->getConfig()->get('lighp-force-overwrite');
+		$forceOverwriteEnv = getenv('COMPOSER_LIGHP_FORCE_OVERWRITE');
+		if ($forceOverwriteEnv === 'true') $forceOverwrite = true;
+		
 		$installPath = $this->getInstallPath($package);
 
 		// Download files
@@ -162,7 +160,7 @@ class ModuleInstaller extends LibraryInstaller {
 					}
 				}
 				
-				if (!$overwrite && !$this->overwrite) {
+				if (!$overwrite && !$forceOverwrite) {
 					$targetPath .= '.new';
 					$this->io->write('<warning>'.$sourceIndex.' locally modified, new version installed as '.$targetPath.'</warning>');
 				}
