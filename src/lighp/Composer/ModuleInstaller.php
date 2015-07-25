@@ -31,8 +31,7 @@ class ModuleInstaller extends LibraryInstaller {
 
 		//By default, keep changes and continue operation
 		if (!$this->io->isInteractive()) {
-			//$discardChanges = $this->config->get('discard-changes');
-			$discardChanges = false;
+			$discardChanges = $this->config->get('discard-changes');
 
 			if (true === $discardChanges) {
 				return true;
@@ -93,11 +92,11 @@ class ModuleInstaller extends LibraryInstaller {
 	protected function downloadCode(PackageInterface $package, array $initialFiles = array()) {
 		$installPath = $this->getInstallPath($package);
 
-		//Download files
+		// Download files
 		$downloadPath = 'var/tmp/'.$package->getPrettyName();
 		$this->downloadManager->download($package, $downloadPath);
 
-		//Copy files
+		// Copy files
 		$installPath = $this->getInstallPath($package);
 
 		$sourcePath = $downloadPath . DIRECTORY_SEPARATOR . 'src';
@@ -117,9 +116,9 @@ class ModuleInstaller extends LibraryInstaller {
 				$sourceSize = filesize($sourcePath);
 				$sourceMd5sum = md5_file($sourcePath);
 
-				$copyFile = true;
+				$overwrite = true;
 
-				//If the file already exists, do not overwrite it
+				// If the file already exists, do not overwrite it
 				if (file_exists($targetPath)) {
 					$initialFileData = array();
 					if (isset($initialFiles[$sourceIndex])) {
@@ -129,7 +128,7 @@ class ModuleInstaller extends LibraryInstaller {
 					$targetSize = filesize($targetPath);
 					$targetMd5sum = null;
 
-					//Check if the file has changed
+					// Check if the file has changed
 					$changed = false;
 					if ($targetSize !== $sourceSize) {
 						$changed = true;
@@ -146,24 +145,25 @@ class ModuleInstaller extends LibraryInstaller {
 							$targetMd5sum = md5_file($targetPath);
 						}
 
-						//File not changed since last update
+						// File not changed since last update
 						if ($targetMd5sum === $initialFileData['md5sum']) {
 							$changed = false;
 						}
 					}
 
 					if ($changed) {
-						$this->io->write('<warning>'.$sourceIndex.' already exists, skipped (not overwritten).</warning>');
-						$copyFile = false;
+						$overwrite = false;
 					}
 				}
+				
+				if (!$overwrite) {
+					$targetPath .= '.new';
+					$this->io->write('<warning>'.$sourceIndex.' locally modified, new version installed as '.$targetPath.'</warning>');
+				}
 
-				if ($copyFile) {
-					$result = copy($sourcePath, $targetPath);
-
-					if ($result === false) {
-						throw new RuntimeException('cannot copy "'.$targetPath.'"');
-					}
+				$result = copy($sourcePath, $targetPath);
+				if ($result === false) {
+					throw new RuntimeException('cannot copy "'.$targetPath.'"');
 				}
 
 				$copied[$sourceIndex] = array(
